@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import React from "react";
+import { BASE_URL } from "../../constant/api";
 const CardComponent = ({
   info,
   showCaption = true,
@@ -24,7 +25,7 @@ const CardComponent = ({
             width: { xs: 250, md: 350 },
             objectFit: "contain",
           }}
-          src={`localhost:5000${info.imagePath}`}
+          src={`${BASE_URL}/${info.imagePath}`}
           alt={info.name}
         />
         <CardContent>

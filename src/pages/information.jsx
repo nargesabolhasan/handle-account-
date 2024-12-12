@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import { Toaster, toast } from "react-hot-toast";
 import HandleBack from "../components/handleBack";
 import axios from "axios";
-import { productsFetch } from "../constant/api";
+import { BASE_URL, productsFetch } from "../constant/api";
 
 const Information = () => {
   const params = useParams();
@@ -48,7 +48,7 @@ const Information = () => {
                 width: { xs: 250, md: 350 },
                 objectFit: "contain",
               }}
-              src={info.imagePath}
+              src={`${BASE_URL}/${info.imagePath}`}
               alt={info.name}
             />
             <Typography gutterBottom variant="h5" component="div">

@@ -7,7 +7,6 @@ const fs = require("fs");
 const app = express();
 const PORT = 5000;
 const { v4: uuidv4 } = require("uuid");
-const { log } = require("console");
 
 // Middleware
 app.use(cors());
@@ -15,10 +14,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("uploads"));
 
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 // Set up storage for Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -47,7 +52,8 @@ app.post("/upload", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
-  res.json({ filePath: `/uploads/${req.file.filename}` });
+  res.set("Content-Type", "image/webp");
+  res.json({ filePath: req.file.filename });
 });
 
 // Route to handle posting product data
@@ -55,19 +61,15 @@ app.post("/products", (req, res) => {
   const { name, count, caption, moreInfo, imagePath } = req.body;
   const id = uuidv4();
 
-  // Read existing products from the JSON file
   let products = readProductsFromFile();
 
-  // Store the new product data
   const newProduct = { id, name, count, caption, moreInfo, imagePath };
   products.push(newProduct);
 
-  // Write updated products back to the JSON file
   writeProductsToFile(products);
 
   console.log("Received product data:", newProduct);
 
-  // Send a response back to the client
   res
     .status(201)
     .json({ message: "Product data received successfully", data: newProduct });
@@ -91,22 +93,6 @@ app.get("/products/:id", (req, res) => {
   } else {
     res.status(404).json({ message: "Product not found" }); // Return a 404 if not found
   }
-});
-
-// Route to get the image
-app.get("/images/:filename", (req, res) => {
-  //   const filePath = path.join(__dirname, "uploads", req.params.filename);
-  //   res.sendFile(filePath);
-
-  // Set the content type based on the file extension
-  res.type(path.extname(filePath));
-
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error("File not found:", err);
-      res.status(404).send("File not found");
-    }
-  });
 });
 
 // Start the server
