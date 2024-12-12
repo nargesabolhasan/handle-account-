@@ -23,7 +23,7 @@ const ProductUpload = () => {
 
   const onSubmit = async (data) => {
     if (!data.image) {
-      console.error("No image selected.");
+      toast.error("No image selected.");
       return;
     }
 
@@ -48,6 +48,7 @@ const ProductUpload = () => {
       });
 
       toast.success("Product data submitted successfully!");
+      reset();
     } catch (error) {
       console.error("Error uploading data:", error);
     }

@@ -22,13 +22,12 @@ const Home = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(productsFetch);
-
       setCardList([...response.data]);
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.error("Error submitting form:", error);
-      toast.error("Error submitting form");
+      console.error("error:", error);
+      toast.error("try again !");
     }
   };
 
@@ -51,6 +50,7 @@ const Home = () => {
                       size="small"
                       onClick={(e) => handleShop(e, item)}
                       variant="outlined"
+                      data_id_item={item.id}
                     >
                       Shop
                     </Button>

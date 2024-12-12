@@ -24,7 +24,7 @@ const CardComponent = ({
             width: { xs: 250, md: 350 },
             objectFit: "contain",
           }}
-          src={`${info.imagePath}`}
+          src={`localhost:5000${info.imagePath}`}
           alt={info.name}
         />
         <CardContent>
