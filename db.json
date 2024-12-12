@@ -1,0 +1,57 @@
+{
+  "products": [
+    {
+      "id": "9f2c",
+      "name": "s",
+      "count": "3",
+      "info": "sdfasfdasdf",
+      "imagePath": "code.png"
+    },
+    {
+      "id": "2e01",
+      "name": "narges",
+      "count": "12",
+      "info": "1222222",
+      "imagePath": "code.png"
+    },
+    {
+      "id": "b119",
+      "name": "narges",
+      "count": "12",
+      "info": "1222222",
+      "imagePath": "code.png"
+    },
+    {
+      "id": "1c01",
+      "name": "narges",
+      "count": "12",
+      "info": "1222222",
+      "imagePath": "co2de.png"
+    },
+    {
+      "id": "bd7d",
+      "name": "n",
+      "count": "13",
+      "info": "dfdsfasdf asdasd",
+      "imagePath": "18.mp4"
+    },
+    {
+      "id": "298f",
+      "name": "sara",
+      "count": "33",
+      "info": "sara",
+      "imagePath": "front-end-17.pptx"
+    },
+    {
+      "id": "80f5",
+      "name": " maryam sadat",
+      "count": "111",
+      "info": "s",
+      "imagePath": "front-end-17.pptx"
+    }
+  ],
+  "admin": {
+    "username": "admin",
+    "password": "12345"
+  }
+}
