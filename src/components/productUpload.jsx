@@ -1,12 +1,24 @@
-import axios from "axios";
+import { CircularProgress } from "@mui/material";
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
 import { productsFetch, uploadImageFetch } from "../constant/api";
+import useAxios from "../hooks/useAxios";
+import toast from "react-hot-toast";
 
 const ProductUpload = () => {
-  const { register, handleSubmit, setValue, getValues, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const { startRequest, loading } = useAxios();
+  const { startRequest: imageRequest, loading: imageLoading } = useAxios();
+
   const inputs = [
     { id: 1, name: "name", placeHolder: "Product Name", type: "text" },
     { id: 2, name: "count", placeHolder: "Count", type: "number" },
@@ -21,45 +33,46 @@ const ProductUpload = () => {
     setValue("image", acceptedFiles);
   };
 
-  const onSubmit = async (data) => {
-    if (!data.image) {
-      toast.error("No image selected.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("image", data.image[0]);
-    try {
-      const response = await axios.post(uploadImageFetch, formData);
-      const imagePath = response.data.filePath;
-
-      const productData = {
-        name: data.name,
-        count: data.count,
-        caption: data.caption,
-        moreInfo: data.moreInfo,
-        imagePath: imagePath,
-      };
-
-      await axios.post(productsFetch, productData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      toast.success("Product data submitted successfully!");
-      reset();
-    } catch (error) {
-      console.error("Error uploading data:", error);
-    }
-  };
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       "image/*": [],
     },
+    multiple: false,
   });
+
+  const onSubmit = async (userData) => {
+    const formData = new FormData();
+    formData.append("image", userData.image[0]);
+
+    const responseImage = await imageRequest({
+      method: "POST",
+      url: uploadImageFetch,
+      data: formData,
+    });
+
+    if (responseImage) {
+      const productData = {
+        name: userData.name,
+        count: userData.count,
+        caption: userData.caption,
+        moreInfo: userData.moreInfo,
+        imagePath: responseImage?.filePath,
+      };
+      await startRequest({
+        method: "POST",
+        url: productsFetch,
+        data: productData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      toast.success("product uploaded!");
+      reset();
+    } else {
+      toast.error("faild to upload image!");
+    }
+  };
 
   return (
     <div className="container mx-auto p-4 md:w-[600px]">
@@ -70,16 +83,24 @@ const ProductUpload = () => {
       >
         <div
           {...getRootProps()}
-          className="w-full border-2 border-dashed border-gray-300 p-4 cursor-pointer"
+          className={
+            !!errors["image"]?.type
+              ? "w-full border-2 border-red-500  p-4 cursor-pointer"
+              : "w-full border-2 border-dashed border-gray-300 p-4 cursor-pointer"
+          }
         >
-          <label>image : </label>
-          <input {...getInputProps()} />
+          <label>image</label>
+          <input
+            className="w-full"
+            {...register("image", { required: true })}
+            {...getInputProps()}
+          />
 
           {!!getValues("image") ? (
             <p className="text-green-500">{getValues("image")[0].name}</p>
           ) : (
             <p className="text-gray-400">
-              Drag and drop a imge here, or click to select a image
+              Drag and drop a image here, or click to select a image
             </p>
           )}
         </div>
@@ -101,7 +122,11 @@ const ProductUpload = () => {
           ></textarea>
         ))}
         <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          Upload Product
+          {loading || imageLoading ? (
+            <CircularProgress size="30px" color="inherit" />
+          ) : (
+            " Upload Product"
+          )}
         </button>
       </form>
     </div>

@@ -1,27 +1,20 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
+import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import HandleBack from "../components/handleBack";
 import { BASE_URL, productsFetch } from "../constant/api";
+import useAxios from "../hooks/useAxios";
 
 const Information = () => {
   const params = useParams();
-  const [info, setInfo] = useState({});
-  const [loading, setLoading] = useState(true);
+
+  const { responseData, startRequest, loading } = useAxios();
 
   const fetchProducts = async () => {
-    try {
-      const response = await axios.get(`${productsFetch}/${params.id}`);
-      setInfo(response.data);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.error("Error get data", error);
-      toast.error("Try again !");
-    }
+    await startRequest({
+      url: `${productsFetch}/${params.id}`,
+    });
   };
 
   useEffect(() => {
@@ -30,8 +23,10 @@ const Information = () => {
 
   return (
     <>
-      {loading ? (
-        <>loading...</>
+      {loading || !responseData ? (
+        <div className="w-full h-full flex justify-center items-center">
+          <CircularProgress size="3rem" />
+        </div>
       ) : (
         <Grid container spacing={2}>
           <Grid size={{ xs: 12 }}>
@@ -48,17 +43,17 @@ const Information = () => {
                 width: { xs: 250, md: 350 },
                 objectFit: "contain",
               }}
-              src={`${BASE_URL}/${info.imagePath}`}
-              alt={info.name}
+              src={`${BASE_URL}/${responseData?.imagePath}`}
+              alt={responseData?.name}
             />
             <Typography gutterBottom variant="h5" component="div">
-              {info.name}
+              {responseData?.name}
             </Typography>
 
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {info.caption}
+              {responseData?.caption}
             </Typography>
-            <Typography>{info.moreInfo}</Typography>
+            <Typography>{responseData?.moreInfo}</Typography>
           </Grid>
         </Grid>
       )}

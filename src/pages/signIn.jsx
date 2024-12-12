@@ -17,7 +17,7 @@ const SignIn = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="m-auto w-fit">
       <FormControl className="flex flex-col gap-3">
         <div className="flex flex-row gap-2 items-center">
           <HandleBack />
