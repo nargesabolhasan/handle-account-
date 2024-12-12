@@ -1,7 +1,7 @@
 import { Button, CardActions, Grid2 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import CardComponent from "../components/cards";
@@ -36,7 +36,7 @@ const Home = () => {
   }, []);
 
   return (
-    <Grid2 container spacing={2}>
+    <Grid2 container spacing={2} className="w-full">
       {loading ? (
         <>loading...</>
       ) : (
@@ -70,7 +70,6 @@ const Home = () => {
           )}
         </>
       )}
-      <Toaster />
     </Grid2>
   );
 };

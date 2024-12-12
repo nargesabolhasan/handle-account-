@@ -1,10 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { Toaster, toast } from "react-hot-toast";
-import HandleBack from "../components/handleBack";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useParams } from "react-router";
+import HandleBack from "../components/handleBack";
 import { BASE_URL, productsFetch } from "../constant/api";
 
 const Information = () => {
@@ -60,7 +60,6 @@ const Information = () => {
             </Typography>
             <Typography>{info.moreInfo}</Typography>
           </Grid>
-          <Toaster />
         </Grid>
       )}
     </>

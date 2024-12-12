@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { productsFetch, uploadImageFetch } from "../constant/api";
 
 const ProductUpload = () => {
@@ -103,7 +103,6 @@ const ProductUpload = () => {
         <button type="submit" className="bg-blue-500 text-white p-2 rounded">
           Upload Product
         </button>
-        <Toaster />
       </form>
     </div>
   );

@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 export default function BadgeCompoenet() {
   const shopList = useSelector((state) => state.shopList.item);
   const countShop = shopList.reduce((sum, curr) => {
-    return (sum += curr.count);
+    return (sum += curr.reserveCount);
   }, 0);
 
   return (

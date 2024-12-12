@@ -47,21 +47,20 @@ const Basket = () => {
                     -
                   </Button>
                   <Typography sx={{ padding: 2 }}>
-                    count: {item.count}
+                    count: {item.reserveCount}
                   </Typography>
                   <Button
                     xsx={{ padding: 2, width: "content" }}
                     variant="contained"
                     onClick={(e) => handleShop(e, item)}
-                    disabled={item.count === 30}
+                    disabled={item.reserveCount >= item.count}
                   >
                     +
                   </Button>
                 </Box>
-                {item.count === 30 && (
+                {item.reserveCount >= item.count && (
                   <Typography color="error" variant="caption">
-                    You are allowed to order a maximum of 30 pieces of each
-                    product.
+                    Out of stock !
                   </Typography>
                 )}
               </CardComponent>

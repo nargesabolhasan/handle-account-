@@ -1,14 +1,5 @@
 {
-  "products": [
-    {
-      "id": "c285",
-      "name": "not found",
-      "count": "12",
-      "caption": "www",
-      "moreInfo": "bbbb",
-      "imagePath": "notFound.png"
-    }
-  ],
+  "users": [],
   "admin": {
     "username": "admin",
     "password": "12345"

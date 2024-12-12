@@ -1,4 +1,5 @@
 import { Container } from "@mui/material";
+import { Toaster } from "react-hot-toast";
 import { Route, Routes, useLocation } from "react-router";
 import "./App.css";
 import HeaderComponent from "./components/header";
@@ -38,7 +39,7 @@ function App() {
       }}
     >
       {!isLoginSignin && <HeaderComponent />}
-      <div className="pt-7">
+      <div className="pt-7 w-full">
         <Routes>
           <Route path={HOME_ROUTE} element={<Home />} />
           <Route path={BASKET_ROUTE} element={<Basket />} />
@@ -48,12 +49,13 @@ function App() {
           <Route path={SIGNIN_ROUTE} element={<SignIn />} />
           <Route path={INFO_ROUTE} element={<Information />} />
           <Route
-            path={adminIsLogin ? ADMIN_PANEL_ROUTE : LOGIN_ROUTE}
+            path={ADMIN_PANEL_ROUTE}
             element={adminIsLogin ? <AdminPanel /> : <Login />}
           />
           <Route path={"*"} element={<NotFound />} />
         </Routes>
       </div>
+      <Toaster />
     </Container>
   );
 }
