@@ -7,6 +7,16 @@ import { toast, Toaster } from "react-hot-toast";
 
 const ProductUpload = () => {
   const { register, handleSubmit, setValue, getValues, reset } = useForm();
+  const inputs = [
+    { id: 1, name: "name", placeHolder: "Product Name", type: "text" },
+    { id: 2, name: "count", placeHolder: "Count", type: "number" },
+  ];
+
+  const textarea = [
+    { id: 4, name: "caption", placeHolder: "Product caption" },
+    { id: 5, name: "Info", placeHolder: "Product Info" },
+  ];
+
   const onDrop = (acceptedFiles) => {
     setValue("file", acceptedFiles);
   };
@@ -33,7 +43,12 @@ const ProductUpload = () => {
     }
   };
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      "image/*": [],
+    },
+  });
 
   return (
     <div className="container mx-auto p-4">
@@ -43,31 +58,34 @@ const ProductUpload = () => {
           {...getRootProps()}
           className="border-2 border-dashed border-gray-300 p-4 cursor-pointer"
         >
+          <label>image : </label>
           <input {...getInputProps()} />
 
           {!!getValues("file") ? (
             <p className="text-green-500">{getValues("file")[0].name}</p>
           ) : (
-            <p>Drag and drop a file here, or click to select a file</p>
+            <p className="text-gray-400">
+              Drag and drop a imge here, or click to select a image
+            </p>
           )}
         </div>
-        <input
-          type="text"
-          placeholder="Product Name"
-          {...register("name", { required: true })}
-          className="border border-gray-300 p-2 w-full"
-        />
-        <input
-          type="number"
-          placeholder="Count"
-          {...register("count", { required: true })}
-          className="border border-gray-300 p-2 w-full"
-        />
-        <textarea
-          placeholder="Product Info"
-          {...register("info", { required: true })}
-          className="border border-gray-300 p-2 w-full"
-        ></textarea>
+        {inputs.map((item) => (
+          <input
+            type={item.type}
+            key={item.id}
+            placeholder={item.placeHolder}
+            {...register(`${item.name}`, { required: true })}
+            className="border border-gray-300 p-2 w-full"
+          />
+        ))}
+        {textarea.map((item) => (
+          <textarea
+            key={item.id}
+            placeholder={item.placeHolder}
+            {...register(`${item.name}`, { required: true })}
+            className="border border-gray-300 p-2 w-full"
+          ></textarea>
+        ))}
         <button type="submit" className="bg-blue-500 text-white p-2 rounded">
           Upload Product
         </button>
