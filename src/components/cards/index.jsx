@@ -1,7 +1,6 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import React from "react";
-
 const CardComponent = ({
   info,
   showCaption = true,
@@ -25,12 +24,12 @@ const CardComponent = ({
             width: { xs: 250, md: 350 },
             objectFit: "contain",
           }}
-          src={info.image}
-          alt="green iguana"
+          src={`${info.imagePath}`}
+          alt={info.name}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            {info.title}
+            {info.name}
           </Typography>
           {showCaption && (
             <Typography variant="body2" sx={{ color: "text.secondary" }}>

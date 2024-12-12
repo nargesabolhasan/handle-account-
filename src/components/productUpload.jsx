@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import { productsFetch } from "../constant/api";
+import React from "react";
+import { useDropzone } from "react-dropzone";
+import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
+import { productsFetch, uploadImageFetch } from "../constant/api";
 
 const ProductUpload = () => {
   const { register, handleSubmit, setValue, getValues, reset } = useForm();
@@ -14,32 +14,42 @@ const ProductUpload = () => {
 
   const textarea = [
     { id: 4, name: "caption", placeHolder: "Product caption" },
-    { id: 5, name: "Info", placeHolder: "Product Info" },
+    { id: 5, name: "moreInfo", placeHolder: "Product Info" },
   ];
 
   const onDrop = (acceptedFiles) => {
-    setValue("file", acceptedFiles);
+    setValue("image", acceptedFiles);
   };
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-    formData.append("file", data.file[0]);
-    formData.append("name", data.name);
-    formData.append("count", data.count);
-    formData.append("info", data.info);
+    if (!data.image) {
+      console.error("No image selected.");
+      return;
+    }
 
+    const formData = new FormData();
+    formData.append("image", data.image[0]);
     try {
-      await axios.post(productsFetch, {
+      const response = await axios.post(uploadImageFetch, formData);
+      const imagePath = response.data.filePath;
+
+      const productData = {
         name: data.name,
         count: data.count,
-        info: data.info,
-        imagePath: data.file[0].name,
+        caption: data.caption,
+        moreInfo: data.moreInfo,
+        imagePath: imagePath,
+      };
+
+      await axios.post(productsFetch, productData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-      toast.success("Product uploaded successfully");
-      reset();
+
+      toast.success("Product data submitted successfully!");
     } catch (error) {
-      console.error("Error uploading product:", error);
-      toast.error("Failed to upload product");
+      console.error("Error uploading data:", error);
     }
   };
 
@@ -59,13 +69,13 @@ const ProductUpload = () => {
       >
         <div
           {...getRootProps()}
-          className="border-2 border-dashed border-gray-300 p-4 cursor-pointer"
+          className="w-full border-2 border-dashed border-gray-300 p-4 cursor-pointer"
         >
           <label>image : </label>
           <input {...getInputProps()} />
 
-          {!!getValues("file") ? (
-            <p className="text-green-500">{getValues("file")[0].name}</p>
+          {!!getValues("image") ? (
+            <p className="text-green-500">{getValues("image")[0].name}</p>
           ) : (
             <p className="text-gray-400">
               Drag and drop a imge here, or click to select a image
