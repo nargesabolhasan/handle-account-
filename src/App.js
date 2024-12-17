@@ -3,6 +3,7 @@ import { Toaster } from "react-hot-toast";
 import { Route, Routes, useLocation } from "react-router";
 import "./App.css";
 import HeaderComponent from "./components/header";
+import withPrivateRoute from "./components/HOC/privateRouteHOC";
 import {
   ADMIN_PANEL_ROUTE,
   ADMIN_ROUTE,
@@ -20,8 +21,7 @@ import Information from "./pages/information";
 import Login from "./pages/login";
 import NotFound from "./pages/notFound";
 import SignIn from "./pages/signIn";
-import { STORAGE_ADMIN_LOGIN } from "./constant";
-import withPrivateRoute from "./components/HOC/privateRouteHOC";
+import Profile from "./pages/profile";
 
 function App() {
   const location = useLocation();
@@ -53,6 +53,7 @@ function App() {
             element={withPrivateRoute(AdminPanel)}
           />
           <Route path={"*"} element={<NotFound />} />
+          <Route path={"/p"} element={<Profile />} />
         </Routes>
       </div>
       <Toaster />

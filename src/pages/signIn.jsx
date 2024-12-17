@@ -1,57 +1,63 @@
-import { Button, FormControl, TextField, Typography } from "@mui/material";
 import React from "react";
-import HandleBack from "../components/handleBack";
-import PasswordComponent from "../components/password";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router";
+import { v4 as uuidv4 } from "uuid";
+import SignInForm from "../components/signInForm";
+import { userApi } from "../constant/api";
+import { LOGIN_ROUTE } from "../constant/routes";
+import useAxios from "../hooks/useAxios";
 
 const SignIn = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ mode: "onChange" });
+
+  const navigate = useNavigate();
+  const { startRequest, loading } = useAxios();
 
   const onSubmit = (data) => {
-    //some codes
-    console.log(data);
+    const randomId = uuidv4();
+    const postData = {
+      id: randomId,
+      username: data.username,
+      email: data.email,
+      password: data.password,
+    };
+
+    startRequest({
+      method: "POST",
+      url: `${userApi}`,
+      data: postData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(() => {
+        toast.success("your account created");
+      })
+      .catch(() => toast.error("try again"));
+
+    setTimeout(() => {
+      navigate(LOGIN_ROUTE);
+    }, 1000);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="m-auto w-fit">
-      <FormControl className="flex flex-col gap-3">
-        <div className="flex flex-row gap-2 items-center">
-          <HandleBack />
-          <Typography variant="h5" className="grow text-center">
-            Sign In
-          </Typography>
-        </div>
-        <TextField
-          label="Email"
-          fullWidth
-          margin="normal"
-          type="email"
-          {...register("email")}
-        />
-        <TextField
-          label="user name"
-          type="text"
-          fullWidth
-          margin="normal"
-          {...register("username")}
-        />
-        <PasswordComponent
-          name="password"
-          register={register}
-          {...(errors.password && {
-            error: true,
-            helperText: errors.password.message,
-          })}
-        />
-        <Button variant="contained" color="primary" type="submit">
-          Sign In
-        </Button>
-      </FormControl>
-    </form>
+    <>
+      <SignInForm
+        formTitle={"Sign In"}
+        errors={errors}
+        handleSubmit={handleSubmit(onSubmit)}
+        register={register}
+        loading={loading}
+      />
+      <Link to={LOGIN_ROUTE} className="block text-center">
+        login
+      </Link>
+    </>
   );
 };
 
